@@ -29,12 +29,30 @@ function AddMockInterview() {
   const [difficultyLevel, setDifficultyLevel] = useState("medium");
   const [numQuestions, setNumQuestions] = useState(5);
   const [isMounted, setIsMounted] = useState(false);
+  const [topicRating,setToppicRating]=useState({});
 
   const interviewers = [
     { id: 1, name: "Alenrex Maity", imgSrc: "/interviewer_1.png" },
     { id: 2, name: "John Smith", imgSrc: "/interviewer_2.png" },
     { id: 3, name: "Ethan Vox", imgSrc: "/interviewer_3.png" },
   ];
+
+  useEffect(()=>{
+    try{
+      async function fetchdata(){
+        const response =await fetch("/api/mockInterview");
+        if (!response.ok) {
+          throw new Error("Failed to save interview data");
+        }
+  
+        const savedResponse = await response.json();
+        setToppicRating(savedResponse);
+      }
+      fetchdata();
+    }catch(e){
+      console.log(e);
+    }
+  },[])
 
   useEffect(() => {
    
@@ -45,6 +63,8 @@ function AddMockInterview() {
       setIsMounted(false);
     };
   }, []);
+
+
 
  
 
@@ -90,6 +110,7 @@ function AddMockInterview() {
         - Experience Required: ${years} years
         - Difficulty Level: ${difficultyLevel}
         - Number of Questions: ${numQuestions}
+        - topic wise knowledge of the user based on previous interviews ${topicRating}
         
         I'm attaching the candidate's resume as a file. Use it to generate personalized interview questions.
         
@@ -114,6 +135,9 @@ function AddMockInterview() {
 4. Ensure the response strictly adheres to the provided JSON structure without additional fields, formatting, or preambles.  
 Note: The questions should be realistic and designed to assess the candidate's skills in alignment with their resume, work history, and the job's key responsibilities.  
 Output only the JSON structure without any preamble or explanations.
+5. so we have topic wise rating of user rating..based on previous interviews in our platform ...so in this interview u find all the relevente topic according to role and tech stack given and creates all the questions keeping this previous 
+performences in mind and make it more personalized ...example if user have a topic with less rating then focus on those topic more and if user have high
+rating on a topic ..means he knows that topic very well so ask him more advance concept of that topic or avoid those topic as he already know 
 `
       },
       {

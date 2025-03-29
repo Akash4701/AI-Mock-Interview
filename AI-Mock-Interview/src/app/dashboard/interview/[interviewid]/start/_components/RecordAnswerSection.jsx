@@ -331,11 +331,20 @@ function RecordAnswerSection({ mockInterviewQuestion, activeQuestionIndex, inter
         }
       }
       
-      const feedbackPrompt = `Question: ${mockInterviewQuestion[activeQuestionIndex]?.question}, User Answer: ${userAnswer}.
-      Give rating, feedback for improvement, and correct answer in JSON format with key correctAnswer`;
-  
+      const feedbackPrompt = `
+      Question: ${mockInterviewQuestion[activeQuestionIndex]?.question}
+      User Answer: ${userAnswer}
+    
+      Provide a JSON response with the following keys:
+      - "rating": A numerical rating (1-10) for the user's answer.
+      - "feedback": Constructive feedback on how the user can improve.
+      - "correctAnswer": The correct answer.
+      - "topicAnalysis": An object where each key is a topic covered in the question, and its value is a rating (1-10) based on the user's knowledge of that topic.
+    `;
+    
       const result = await chatSession.sendMessage(feedbackPrompt);
       const responseText = result.response.text();
+      console.log("AKASH GOD : ",result);
   
       let jsonData;
       try {
@@ -355,12 +364,14 @@ function RecordAnswerSection({ mockInterviewQuestion, activeQuestionIndex, inter
         setLoading(false);
         return;
       } 
+      console.log('bfhjbhjbhj',jsonData);//*************** */
   
       // Combine text analysis with video analysis
       const combinedAnalysis = {
         ...jsonData,
         videoAnalysis: analysisResult
       };
+
       
       // console.log(combinedAnalysis);
   

@@ -26,9 +26,9 @@ model User {
   Twitter      String?
   AvgRating    Int?
   createdAt    DateTime     @default(now())
-
-  updatedAt DateTime   @default(now())
-  timeSlots TimeSlot[]
+  TopicRating  Json?
+  updatedAt    DateTime     @default(now())
+  timeSlots    TimeSlot[]
 
   // mockInterviewer MockInterview[] @relation("Interviewer")
   // mockInterviewee MockInterview[] @relation("Interviewee")
@@ -53,17 +53,17 @@ model Experience {
 }
 
 model MockInterview {
-  id              String @id @default(auto()) @map("_id") @db.ObjectId
-  userId          String
+  id                 String @id @default(auto()) @map("_id") @db.ObjectId
+  userId             String
   // interviewerId String
   // intervieweeId String
-  MockResponse    Json[]
-  jobPosition     String
-  jobDesc         String
-  jobexperience   String
-  difficultyLevel String
-  numQuestions    Int
-  interviewerImageId  Int
+  MockResponse       Json[]
+  jobPosition        String
+  jobDesc            String
+  jobexperience      String
+  difficultyLevel    String
+  numQuestions       Int
+  interviewerImageId Int
 
   createdAt DateTime     @default(now())
   // interviewer   User         @relation("Interviewer", fields: [interviewerId], references: [id])
@@ -88,6 +88,7 @@ model UserAnswer {
   overallPresentation    String
   improvementSuggestions String
   videoUrl               String
+  TopicRating            Json?
   // InterviewerFeedback String?
   // InterviewerRating   Int?
   // interviewerId       String

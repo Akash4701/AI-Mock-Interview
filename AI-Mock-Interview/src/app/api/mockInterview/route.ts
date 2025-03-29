@@ -2,6 +2,40 @@ import { db } from "@/lib/db";
 import { currentUser } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 
+export async function GET(request: NextRequest) {
+  try {
+    const user = await currentUser();
+    if (!user) {
+      return NextResponse.json(
+        { error: "Unauthorized. Please log in." },
+        { status: 401 }
+      );
+    }
+
+    // Fetch the user's TopicRating
+    const existingUser = await db.user.findUnique({
+      where: { id: user.id },
+      select: { TopicRating: true }
+    });
+
+    if (!existingUser || !existingUser.TopicRating) {
+      return NextResponse.json(
+        { message: "No TopicRating found for this user." },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({ TopicRating: existingUser.TopicRating }, { status: 200 });
+
+  } catch (error: any) {
+    console.error("Error fetching TopicRating:", error.message || error);
+    return NextResponse.json(
+      { error: "Failed to fetch TopicRating" },
+      { status: 500 }
+    );
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
